@@ -1,13 +1,15 @@
 var ldap = require('ldapjs');
 var assert = require('assert');
 var config = require('../config/ldap');
-let entries = [];
 var client = ldap.createClient({
   url: 'ldap://10.228.193.134:389',
   reconnect: true
 });
+client.on('error', function(err) {
+    console.warn(err);
+});
 
-async function connectM(req, res){
+async function connectM(req){
     await client.bind(config.credentialsUser.user,config.credentialsUser.pass, function(err) {
         assert.ifError(err);
          modify(req);
@@ -23,19 +25,18 @@ async function connectM(req, res){
         l:`${req.l}`
       }
     });
-    await client.modify( `CN=${req.cn},OU=Users,OU=GeneralUsers,OU=Regionales,DC=dssatuat,DC=sat,DC=gob,DC=mx`, change, function(err) {
+    await client.modify(`CN=${req.cn},OU=Users,OU=GeneralUsers,OU=Regionales,DC=dssatuat,DC=sat,DC=gob,DC=mx`, change, function(err) {
       assert.ifError(err);
       disconnect();
       });         
    }catch (err) {
           console.log(err);
-        }
-      
+        } 
   }
 
   function disconnect(){
     client.unbind(  function(err,res) {
-      if (err) {
+      if(err){
         console.error(" close  connection FAILED: %j", 'dn: ' + err.dn + '\n code: ' + err.code + '\n message: ' + err.message);
       } else {
         console.log("  close connection WORKED: %j"+ res   );

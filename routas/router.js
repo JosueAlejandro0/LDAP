@@ -1,5 +1,4 @@
 const express = require('express');
-const ldap = require('../ldap');
 const search = require('../controllers/search');
 const modify = require('../controllers/modify');
 const add = require('../controllers/add');
@@ -17,7 +16,6 @@ router.post('/post', function (req, res) {
 });
 
 router.post('/add', function (req, res) {
-
   var json={
      SamAccountName:req.body.SamAccountName,
      GiveName:req.body.GiveName,
@@ -46,7 +44,6 @@ router.post('/add', function (req, res) {
      instanceType:req.body.instanceType,
      objectClass:req.body.objectClass
   }
-  
   res.send(add.connectA(json));
 });
 

@@ -1,10 +1,16 @@
 var ldap = require('ldapjs');
 var assert = require('assert');
 var config = require('../config/ldap');
+
 let entries = [];
+
 var client = ldap.createClient({
   url: 'ldap://10.228.193.134:389',
   reconnect: true
+});
+
+client.on('error', function(err) {
+    console.warn( err);
 });
 
 async function connectS(req, res){
@@ -49,10 +55,9 @@ function search(req){
         });
     
       });
-    
     }catch (err) {
         console.log(err);
-      }
+    }
     
  }); 
 }
