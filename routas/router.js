@@ -16,9 +16,11 @@ router.post('/post', function (req, res) {
 });
 
 router.post('/add', function (req, res) {
+
   var json={
+     dn:req.body.dn,  
      SamAccountName:req.body.SamAccountName,
-     GiveName:req.body.GiveName,
+     GivenName:req.body.GivenName,
      Initials:req.body.Initials,
      DisplayName:req.body.DisplayName,
      Description:req.body.Description,
@@ -44,6 +46,7 @@ router.post('/add', function (req, res) {
      instanceType:req.body.instanceType,
      objectClass:req.body.objectClass
   }
+ 
   res.send(add.connectA(json));
 });
 

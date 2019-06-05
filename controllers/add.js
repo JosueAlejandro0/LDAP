@@ -3,11 +3,16 @@
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 */
 var ldap = require('ldapjs');
+var path = require('path');
 var assert = require('assert');
 var config = require('../config/ldap');
 var fs = require('fs');
 var client = ldap.createClient({
   url: 'ldaps://10.228.193.134:636',
+  tlsOptions: {
+    ca: [ fs.readFileSync(path.resolve('../LDAP-master/config/CPRIIUATACDY01.cer') )],
+    rejectUnauthorized:false  
+  }, 
 /*
     //opción 1
   tlsOptions: {
@@ -63,38 +68,38 @@ module.exports.connectA = connectA;
 async function add(req,res){
     try{
     var entry = {
-    SamAccountName:req.SamAccountName,
-     GiveName:                     req.GiveName,
-     Initials:                     req.Initials,
-     DisplayName:                  req.DisplayName,
-     Description:                  req.Description,
-     physicalDeliveryOfficeName:   req.physicalDeliveryOfficeName,
-     mail:                         req.mail,
-     StreetAddress:                req.StreetAddress,
-     l:                            req.l,
-     st:                           req.st,
-     PostalCode:                   req.PostalCode,
-     co:                           req.co,
-     UserPrincipal:                req.UserPrincipal,
-     ipPhone:                      req.ipPhone,
-     Title:                        req.Title,
-     Department:                   req.Department,
-     Company:                      req.Company,
-     Manager:                      req.Manager,
-     EmployeeID:                   req.EmployeeID,
-     sn:                           req.sn,
-     mailNickname:                 req.mailNickname,
-     cn:                           req.cn,
-     distinguishedName:            req.distinguishedName,
-     objectCategory:               req.objectCategory,
-     instanceType:                 req.instanceType,
-     objectClass:                  req.objectClass
+    SamAccountName:               req.SamAccountName,
+    GivenName:                    req.GivenName,
+    Initials:                     req.Initials,
+    DisplayName:                  req.DisplayName,
+    Description:                  req.Description,
+    //physicalDeliveryOfficeName:   req.physicalDeliveryOfficeName,
+    mail:                         req.mail,
+    //StreetAddress:                req.StreetAddress,
+    l:                            req.l,
+    //st:                           req.st,
+    //PostalCode:                   req.PostalCode,
+    //co:                           req.co,
+    //UserPrincipal:                req.UserPrincipal,
+    //ipPhone:                      req.ipPhone,
+    //Title:                        req.Title,
+    //Department:                   req.Department,
+    //Company:                      req.Company,
+    //Manager:                      req.Manager,
+    //EmployeeID:                   req.EmployeeID,
+    //sn:                           req.sn,
+    mailNickname:                 req.mailNickname,
+    cn:                           req.cn,
+    distinguishedName:            req.distinguishedName,
+    objectCategory:               req.objectCategory,
+    //instanceType:                 req.instanceType,
+    objectClass:                  ["top","person","organizationalPerson","user"]
   };
- await client.add('OU=Regionales,DC=dssatuat,DC=sat,DC=gob,DC=mx', entry, function(err) {
-    assert.ifError(err);
+  console.log(entry);
+ await client.add(req.dn, entry, function(err) {
+    assert.ifError(err);    
     disconnect();
 });
-
 }catch (err) {
     console.log(err);
   }
