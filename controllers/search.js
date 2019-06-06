@@ -32,7 +32,7 @@ function search(req){
       filter: `(sAmaccountName=${data})`,
       scope: 'sub',
       attributes: ['SamAccountName','GivenName','Initials',
-      'DisplayName','Description','physicalDeliveryOfficeName','mail','StreetAddress','l','st','PostalCode','co','UserPrincipal','ipPhone','Title','Department','Company','Manager','EmployeeID','sn','mailNickname','cn','distinguishedName','objectCategory','instanceType','objectClass'   ]
+      'DisplayName','Description','physicalDeliveryOfficeName','mail','StreetAddress','l','st','PostalCode','co','UserPrincipal','ipPhone','Title','Department','Company','Manager','EmployeeID','sn','mailNickname','cn','distinguishedName','objectCategory','instanceType','objectClass']
     };
     
       

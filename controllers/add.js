@@ -1,61 +1,23 @@
-/*
-  Opción 3 
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-*/
 var ldap = require('ldapjs');
 var path = require('path');
 var assert = require('assert');
 var config = require('../config/ldap');
 var fs = require('fs');
+var memberof = ["CN=Domain Users,CN=Users,DC=dssatuat,DC=sat,DC=gob,DC=mx",
+"CN=uann11,OU=SATCPN,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx",
+"CN=SAT_Genero_Mujer,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx",
+"CN=SAT_Genero_Hombre,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx"];    
+
 var client = ldap.createClient({
   url: 'ldaps://10.228.193.134:636',
   tlsOptions: {
     ca: [ fs.readFileSync(path.resolve('../LDAP-master/config/CPRIIUATACDY01.cer') )],
-    rejectUnauthorized:false  
-  }, 
-/*
-    //opción 1
-  tlsOptions: {
-    rejectUnauthorized: false
-  },
-    //opción 2
-  tlsOptions:{
-   key: fs.readFileSync('client-private-key.pem'),
-   cert: fs.readFileSync('client-certificate.pem'),
-   ca: [ fs.readFileSync('../server/server-certificate.pem') ]
-  },
-*/
-  
-  reconnect: true
+    rejectUnauthorized:false},
+    reconnect: true
 });
 client.on('error', function(err) {
     console.warn( err);
 });
-
-/*
-Opción 4
-    var opts = {
-        ca: [fs.readFileSync('./server/ldap.pem')],
-        reconnect: true,
-        rejectUnauthorized: false // for self-signed
-    };
-
-    var client = LDAP.createClient({
-        url: 'ldaps://10.228.193.134:636',
-        tlsOptions: opts
-    });
-
-    var controls = client.controls;
-
-    client.starttls(opts, controls, function(err, res) {
-        assert.ifError(err);
-        client.bind(dn, password, function (err) {
-            assert.ifError(err);
-        });
-    log.info("StartTTLS connection established.")
-    });
-
-*/ 
 
 async function connectA(req, res){
   await client.bind(config.credentialsUser.user,config.credentialsUser.pass, function(err) {
@@ -98,6 +60,7 @@ async function add(req,res){
   console.log(entry);
  await client.add(req.dn, entry, function(err) {
     assert.ifError(err);    
+    //aqui va el modify
     disconnect();
 });
 }catch (err) {
@@ -114,3 +77,36 @@ function disconnect(){
     }
   });
 }
+
+
+
+
+async function modifyadd(req){
+  try{
+var memberof = ["CN=Domain Users,CN=Users,DC=dssat,DC=sat,DC=gob,DC=mx",
+"CN=uann11,OU=SATCPN,OU=Distribucion,OU=Grupos,DC=dssat,DC=sat,DC=gob,DC=mx",
+"CN=SAT_Genero_Mujer,OU=Distribucion,OU=Grupos,DC=dssat,DC=sat,DC=gob,DC=mx",
+"CN=SAT_Genero_Hombre,OU=Distribucion,OU=Grupos,DC=dssat,DC=sat,DC=gob,DC=mx"];    
+
+for(variable in memberof){
+  var groupDn = memberof[variable];
+  console.log(groupDn)
+}
+    var change = new ldap.Change({
+      operation: 'add',
+      modification: {
+        member:[req.dn]
+      }
+    });
+    /*await client.modify(groupDn, change, function(err) {
+      assert.ifError(err);
+      disconnect();
+      });*/         
+   }catch (err) {
+          console.log(err);
+        } 
+  }
+
+
+  
+  
