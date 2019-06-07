@@ -3,7 +3,8 @@ var path = require('path');
 var assert = require('assert');
 var config = require('../config/ldap');
 var fs = require('fs');
-var memberof = ["CN=Domain Users,CN=Users,DC=dssatuat,DC=sat,DC=gob,DC=mx",
+var memberof = [
+"CN=Domain Users,CN=Users,DC=dssatuat,DC=sat,DC=gob,DC=mx",
 "CN=uann11,OU=SATCPN,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx",
 "CN=SAT_Genero_Mujer,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx",
 "CN=SAT_Genero_Hombre,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx"];    
@@ -60,8 +61,23 @@ async function add(req,res){
   console.log(entry);
  await client.add(req.dn, entry, function(err) {
     assert.ifError(err);    
-    //aqui va el modify
-    disconnect();
+    memberof.forEach(function(groupDn){    
+      var change = new ldap.Change({
+      operation: 'add',
+      modification: {
+        member:[req.dn]
+      }
+    });
+    client.modify(groupDn, change, function(err, res) {
+      if (err) {
+          console.error("Looks like group add FAILED: %j", err);
+        } else {
+          console.log("Looks like group add WORKED: %j", res);
+        }
+      });
+  });
+
+    //disconnect();
 });
 }catch (err) {
     console.log(err);
@@ -77,36 +93,3 @@ function disconnect(){
     }
   });
 }
-
-
-
-
-async function modifyadd(req){
-  try{
-var memberof = ["CN=Domain Users,CN=Users,DC=dssat,DC=sat,DC=gob,DC=mx",
-"CN=uann11,OU=SATCPN,OU=Distribucion,OU=Grupos,DC=dssat,DC=sat,DC=gob,DC=mx",
-"CN=SAT_Genero_Mujer,OU=Distribucion,OU=Grupos,DC=dssat,DC=sat,DC=gob,DC=mx",
-"CN=SAT_Genero_Hombre,OU=Distribucion,OU=Grupos,DC=dssat,DC=sat,DC=gob,DC=mx"];    
-
-for(variable in memberof){
-  var groupDn = memberof[variable];
-  console.log(groupDn)
-}
-    var change = new ldap.Change({
-      operation: 'add',
-      modification: {
-        member:[req.dn]
-      }
-    });
-    /*await client.modify(groupDn, change, function(err) {
-      assert.ifError(err);
-      disconnect();
-      });*/         
-   }catch (err) {
-          console.log(err);
-        } 
-  }
-
-
-  
-  

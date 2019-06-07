@@ -25,10 +25,11 @@ async function connectA(req, res){
 async function modifyadd(req){
     try{
   var memberof = ["CN=Domain Users,CN=Users,DC=dssatuat,DC=sat,DC=gob,DC=mx",
-    "CN=uann11,OU=SATCPN,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx",
-    "CN=SAT_Genero_Mujer,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx",
-    "CN=SAT_Genero_Hombre,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx"];    
-  dn = "CN=LDAPREG,OU=Users,OU=GeneralUsers,OU=Regionales,DC=dssatuat,DC=sat,DC=gob,DC=mx";
+                  "CN=uann11,OU=SATCPN,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx",
+                  "CN=SAT_Genero_Mujer,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx",
+                  "CN=SAT_Genero_Hombre,OU=Distribucion,OU=Grupos,DC=dssatuat,DC=sat,DC=gob,DC=mx"];    
+
+  dn = "CN=LDAPREGISTRO123,OU=Users,OU=GeneralUsers,OU=Regionales,DC=dssatuat,DC=sat,DC=gob,DC=mx";
     memberof.forEach(function(groupDn){    
         var change = new ldap.Change({
         operation: 'add',
@@ -54,4 +55,3 @@ async function modifyadd(req){
   
 
     connectA();
- 
