@@ -17,7 +17,6 @@ var client = ldap.createClient({
     reconnect: true
 });
 client.on('error', function(err) {
-    console.warn( err);
 });
 
 async function connectA(req, res){
@@ -28,7 +27,7 @@ async function connectA(req, res){
 }
 module.exports.connectA = connectA;
 
-async function add(req,res){
+async function add(req){
     try{
     var entry = {
     SamAccountName:               req.SamAccountName,
@@ -36,29 +35,29 @@ async function add(req,res){
     Initials:                     req.Initials,
     DisplayName:                  req.DisplayName,
     Description:                  req.Description,
-    //physicalDeliveryOfficeName:   req.physicalDeliveryOfficeName,
+    physicalDeliveryOfficeName:   req.physicalDeliveryOfficeName,
     mail:                         req.mail,
-    //StreetAddress:                req.StreetAddress,
+    StreetAddress:                req.StreetAddress,
     l:                            req.l,
-    //st:                           req.st,
-    //PostalCode:                   req.PostalCode,
-    //co:                           req.co,
-    //UserPrincipal:                req.UserPrincipal,
-    //ipPhone:                      req.ipPhone,
-    //Title:                        req.Title,
-    //Department:                   req.Department,
-    //Company:                      req.Company,
-    //Manager:                      req.Manager,
-    //EmployeeID:                   req.EmployeeID,
-    //sn:                           req.sn,
+    st:                           req.st,
+    PostalCode:                   req.PostalCode,
+    co:                           req.co,
+    UserPrincipal:                req.UserPrincipal,
+    ipPhone:                      req.ipPhone,
+    Title:                        req.Title,
+    Department:                   req.Department,
+    Company:                      req.Company,
+    Manager:                      req.Manager,
+    EmployeeID:                   req.EmployeeID,
+    sn:                           req.sn,
     mailNickname:                 req.mailNickname,
     cn:                           req.cn,
     distinguishedName:            req.distinguishedName,
     objectCategory:               req.objectCategory,
-    //instanceType:                 req.instanceType,
+    instanceType:                 req.instanceType,
     objectClass:                  ["top","person","organizationalPerson","user"]
   };
-  console.log(entry);
+
  await client.add(req.dn, entry, function(err) {
     assert.ifError(err);    
     memberof.forEach(function(groupDn){    
@@ -77,19 +76,9 @@ async function add(req,res){
       });
   });
 
-    //disconnect();
 });
 }catch (err) {
     console.log(err);
   }
 }
 
-function disconnect(){
-  client.unbind(  function(err,res) {
-    if (err) {
-      console.error(" close  connection FAILED: %j", 'dn: ' + err.dn + '\n code: ' + err.code + '\n message: ' + err.message);
-    } else {
-      console.log("  close connection WORKED: %j"+ res   );
-    }
-  });
-}
